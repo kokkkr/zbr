@@ -1,10 +1,8 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 
-# تثبيت MySQL driver
 RUN docker-php-ext-install pdo pdo_mysql
+RUN a2enmod rewrite
+RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 
-WORKDIR /app
-COPY . /app
-
-# Railway بيبعت PORT متغير
-CMD php -S 0.0.0.0:$PORT -t .
+COPY . /var/www/html
+RUN chown -R www-data:www-data /var/www/html
