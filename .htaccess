@@ -1,0 +1,22 @@
+# Block all “dotfiles” like .env, .git, .htpasswd, etc.
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+# Extra belt-and-suspenders for .env variants
+<FilesMatch "^\.env(\..*)?$">
+  Require all denied
+</FilesMatch>
+
+
+RewriteEngine On
+
+# Handle requests to /app/ and its subpaths
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^app/(.*)$ /app.php?$1 [QSA,L]
+
+# Handle exact request to /app
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^app$ /app.php [QSA,L]
