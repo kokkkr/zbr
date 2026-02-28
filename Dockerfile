@@ -1,13 +1,10 @@
-FROM php:8.2-apache
+FROM php:8.2-cli
 
-# تثبيت امتداد MySQL
+# تثبيت MySQL driver
 RUN docker-php-ext-install pdo pdo_mysql
 
-# تفعيل mod_rewrite لو عندك .htaccess
-RUN a2enmod rewrite
+WORKDIR /app
+COPY . /app
 
-WORKDIR /var/www/html
-COPY . /var/www/html
-
-# صلاحيات بسيطة (اختياري)
-RUN chown -R www-data:www-data /var/www/html
+# Railway بيبعت PORT متغير
+CMD php -S 0.0.0.0:$PORT -t .
