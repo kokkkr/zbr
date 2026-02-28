@@ -1,3 +1,4 @@
+require_once __DIR__ . '/debug.php';
 <?php
 declare(strict_types=1);
 // কোনো স্পেস/আউটপুট নয়
