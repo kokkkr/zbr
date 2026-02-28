@@ -7,16 +7,18 @@ final class Db
 {
     public static function pdo(): \PDO
     {
-        // .env থেকে নাও
+        // قراءة القيم من ENV
         $dsn  = $_ENV['DB_DSN']  ?? 'mysql:host=127.0.0.1;dbname=app;charset=utf8mb4';
         $user = $_ENV['DB_USER'] ?? 'app_user';
         $pass = $_ENV['DB_PASS'] ?? 'change_me';
 
-        // PDO / pdo_mysql না থাকলে 500 (সাইলেন্ট)
-        if (!class_exists(\PDO::class) || (str_starts_with($dsn, 'mysql:') && !in_array('mysql', \PDO::getAvailableDrivers(), true))) {
-            // error_log('PDO or pdo_mysql not available');
-            http_response_code(500);
-            exit;
+        // تحقق من وجود PDO و pdo_mysql
+        if (!class_exists(\PDO::class)) {
+            die("🔥 PDO extension is not enabled.");
+        }
+
+        if (str_starts_with($dsn, 'mysql:') && !in_array('mysql', \PDO::getAvailableDrivers(), true)) {
+            die("🔥 pdo_mysql driver is not installed on the server.");
         }
 
         try {
@@ -32,9 +34,14 @@ final class Db
             }
 
             return $pdo;
+
         } catch (\PDOException $e) {
-            // error_log('DB connect error: ' . $e->getMessage());
-            http_response_code(500);
+            echo "<h2>💥 Database Connection Error</h2>";
+            echo "<pre>";
+            echo "Message: " . $e->getMessage() . "\n\n";
+            echo "DSN: " . $dsn . "\n";
+            echo "User: " . $user . "\n";
+            echo "</pre>";
             exit;
         }
     }
