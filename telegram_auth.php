@@ -88,7 +88,7 @@ try {
         Telegram::sendMessage($botToken, $announceChat, $text, 'HTML');
     }
 
-    $next = '/app/dashboard';
+    $next = '/index.php?page=dashboard';
 
     if (!empty($_GET['state']) &&
         is_string($_GET['state']) &&
